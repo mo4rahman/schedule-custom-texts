@@ -172,8 +172,9 @@ def schedule_message(ACCOUNT, TOKEN, SENDER_CELL_NUMBER, RECEIVER_CELL_NUMBER, m
 def main():
     """Get credentials to use the send_message function."""
     # NOTE: Replace with your own credentials file.
-    file_name = "PUSH_TO_GITHUB/schedule_text/sample_credentials.json"
+    # file_name = "PUSH_TO_GITHUB/schedule_text/sample_credentials.json"
     # Fill your message_bank with custom messages
+    file_name = "secrets.json"
     message_bank = ["Good Morning", "Hello Love", "ELLO LOVE"]
 
     if import_json_credentials(file_name):
