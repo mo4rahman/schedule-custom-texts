@@ -10,7 +10,7 @@ Schedule the messages.
 
 # NOTE for continuing project:
 #
-# Refactor scheduling code into separate functions to make the code legible.
+# Add a user_info class to have all the information in one object to be able to use in our functions and lessen the amount of parameters needed.
 
 
 import random
@@ -170,8 +170,55 @@ def schedule_message(ACCOUNT, TOKEN, SENDER_CELL_NUMBER, RECEIVER_CELL_NUMBER, m
             continue
 
 
-def schedule_daily():
-    pass
+def schedule_daily(
+    ACCOUNT,
+    TOKEN,
+    SENDER_CELL_NUMBER,
+    RECEIVER_CELL_NUMBER,
+    message,
+    hour=None,
+    minute=None,
+):
+    """Schedules text message every day at a chosen time."""
+    if hour is None:
+        while True:
+            try:
+                hour = input(
+                    "Enter what hour you want to send the message at (remember 24 hour time): "
+                )
+                if int(hour) < 0 or int(hour) > 23:
+                    print("That hour is not in the 24 hour range. Try again.")
+                    continue
+                minute = input("Enter what minutes you want to send the message at: ")
+                if int(minute) < 0 or int(minute) > 59:
+                    print("That hour is not in the 60 minute range. Try again.")
+                    continue
+            except ValueError:
+                print("Please enter valid numbers. Try again.")
+                continue
+            else:
+                # Enter schedule function.
+                # The time in .at() is passed as a string in the format hr:min.
+                schedule.every().day.at(f"{hour}:{minute}").do(
+                    send_message,
+                    ACCOUNT,
+                    TOKEN,
+                    SENDER_CELL_NUMBER,
+                    RECEIVER_CELL_NUMBER,
+                    message,
+                )
+                break
+    else:
+        if minute is None:
+            minute = "0"
+        schedule.every().day.at(f"{hour}:{minute}").do(
+            send_message,
+            ACCOUNT,
+            TOKEN,
+            SENDER_CELL_NUMBER,
+            RECEIVER_CELL_NUMBER,
+            message,
+        )
 
 
 def schedule_timely():
