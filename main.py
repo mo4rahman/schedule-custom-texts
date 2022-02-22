@@ -10,6 +10,7 @@ Schedule the messages.
 
 # NOTE for continuing project:
 #
+# Finish up schedule_timely function.
 # Add a user_info class to have all the information in one object to be able to use in our functions and lessen the amount of parameters needed.
 
 
@@ -222,7 +223,48 @@ def schedule_daily(
 
 
 def schedule_timely():
-    pass
+    time_metric = input(
+        "Press m to schedule every minute, Press h to schedule every hour: "
+    ).lower()
+    if time_metric == "m":
+        while True:
+            try:
+                num_of_mins = int(input("How many minutes would you like to put: "))
+            except ValueError:
+                print("Sorry, that is not a number. Please enter a number.")
+                continue
+
+            else:
+                schedule.every(num_of_mins).minutes.do(
+                    send_message,
+                    ACCOUNT,
+                    TOKEN,
+                    SENDER_CELL_NUMBER,
+                    RECEIVER_CELL_NUMBER,
+                    message,
+                )
+                break
+
+    elif time_metric == "h":
+        while True:
+            try:
+                num_of_hours = int(input("How many hours would you like to put: "))
+            except ValueError:
+                print("Sorry, that is not a number. Please try again.")
+                continue
+            else:
+
+                schedule.every(num_of_hours).hours.do(
+                    send_message,
+                    ACCOUNT,
+                    TOKEN,
+                    SENDER_CELL_NUMBER,
+                    RECEIVER_CELL_NUMBER,
+                    message,
+                )
+                break
+    else:
+        print("That's neither of the options. Please try again.")
 
 
 def main():
