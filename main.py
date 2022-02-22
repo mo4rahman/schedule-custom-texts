@@ -86,86 +86,17 @@ def schedule_message(ACCOUNT, TOKEN, SENDER_CELL_NUMBER, RECEIVER_CELL_NUMBER, m
 
         if user_input == "1":
             # Schedule minutes or hours.
-            time_metric = input(
-                "Press m to schedule every minute, Press h to schedule every hour: "
-            ).lower()
-            if time_metric == "m":
-                while True:
-                    try:
-                        num_of_mins = int(
-                            input("How many minutes would you like to put: ")
-                        )
-                    except ValueError:
-                        print("Sorry, that is not a number. Please enter a number.")
-                        continue
+            schedule_timely(
+                ACCOUNT, TOKEN, SENDER_CELL_NUMBER, RECEIVER_CELL_NUMBER, message
+            )
+            return
 
-                    else:
-                        schedule.every(num_of_mins).minutes.do(
-                            send_message,
-                            ACCOUNT,
-                            TOKEN,
-                            SENDER_CELL_NUMBER,
-                            RECEIVER_CELL_NUMBER,
-                            message,
-                        )
-                        break
-
-            elif time_metric == "h":
-                while True:
-                    try:
-                        num_of_hours = int(
-                            input("How many hours would you like to put: ")
-                        )
-                    except ValueError:
-                        print("Sorry, that is not a number. Please try again.")
-                        continue
-                    else:
-
-                        schedule.every(num_of_hours).hours.do(
-                            send_message,
-                            ACCOUNT,
-                            TOKEN,
-                            SENDER_CELL_NUMBER,
-                            RECEIVER_CELL_NUMBER,
-                            message,
-                        )
-                        break
-            else:
-                print("That's neither of the options. Please try again.")
-                continue
-
-            break
         elif user_input == "2":
             # Schedule daily at certain time.
-            while True:
-                try:
-                    hour = input(
-                        "Enter what hour you want to send the message at (remember 24 hour time): "
-                    )
-                    if int(hour) < 0 or int(hour) > 23:
-                        print("That hour is not in the 24 hour range. Try again.")
-                        continue
-                    minute = input(
-                        "Enter what minutes you want to send the message at: "
-                    )
-                    if int(minute) < 0 or int(minute) > 59:
-                        print("That hour is not in the 60 minute range. Try again.")
-                        continue
-                except ValueError:
-                    print("Please enter valid numbers. Try again.")
-                    continue
-                else:
-                    # Enter schedule function.
-                    schedule.every().day.at(f"{hour}:{minute}").do(
-                        send_message,
-                        ACCOUNT,
-                        TOKEN,
-                        SENDER_CELL_NUMBER,
-                        RECEIVER_CELL_NUMBER,
-                        message,
-                    )
-                    break
-            break
+            schedule_daily(
+                ACCOUNT, TOKEN, SENDER_CELL_NUMBER, RECEIVER_CELL_NUMBER, message
+            )
+            return
         else:
             print("Sorry, those were not one of the choices. Please try again.")
             continue
@@ -208,7 +139,7 @@ def schedule_daily(
                     RECEIVER_CELL_NUMBER,
                     message,
                 )
-                break
+                return
     else:
         if minute is None:
             minute = "0"
@@ -220,6 +151,7 @@ def schedule_daily(
             RECEIVER_CELL_NUMBER,
             message,
         )
+    return
 
 
 def schedule_timely(ACCOUNT, TOKEN, SENDER_CELL_NUMBER, RECEIVER_CELL_NUMBER, message):
