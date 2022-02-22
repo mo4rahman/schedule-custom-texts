@@ -170,6 +170,14 @@ def schedule_message(ACCOUNT, TOKEN, SENDER_CELL_NUMBER, RECEIVER_CELL_NUMBER, m
             continue
 
 
+def schedule_daily():
+    pass
+
+
+def schedule_timely():
+    pass
+
+
 def main():
     """Get credentials to use the send_message function."""
     # NOTE: Replace with your own credentials file.
