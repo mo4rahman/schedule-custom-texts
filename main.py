@@ -8,7 +8,7 @@ Schedule the messages.
 """
 
 
-# NOTE for continuing project:
+# TODO: for continuing project:
 #
 # Finish up schedule_timely function.
 # Add a user_info class to have all the information in one object to be able to use in our functions and lessen the amount of parameters needed.
@@ -34,7 +34,7 @@ class TwilioAccount:
         # Make sure dictionary variables include account and token.
         try:
             with open(file_name) as file_object:
-                # Can these become attributes of our object? Research this.
+                # FIXME: Can these become attributes of our object? Research this.
                 file_content = json.load(file_object)
                 account = file_content.get("account", None)
                 token = file_content.get("token", None)
