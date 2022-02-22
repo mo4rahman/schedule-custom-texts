@@ -31,7 +31,7 @@ class TwilioAccount:
 
     def import_json_credentials(self, file_name):
         """import credentials from json file."""
-        # Make sure dictionary variables include account and token
+        # Make sure dictionary variables include account and token.
         try:
             with open(file_name) as file_object:
                 # Can these become attributes of our object? Research this.
