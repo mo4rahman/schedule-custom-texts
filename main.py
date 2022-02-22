@@ -245,8 +245,7 @@ def schedule_timely(ACCOUNT, TOKEN, SENDER_CELL_NUMBER, RECEIVER_CELL_NUMBER, me
                         RECEIVER_CELL_NUMBER,
                         message,
                     )
-                    break
-            break
+                    return
 
         elif time_metric == "h":
             while True:
@@ -265,8 +264,7 @@ def schedule_timely(ACCOUNT, TOKEN, SENDER_CELL_NUMBER, RECEIVER_CELL_NUMBER, me
                         RECEIVER_CELL_NUMBER,
                         message,
                     )
-                    break
-            break
+                    return
         else:
             print("That's neither an h or an m. Please try again.")
             continue
