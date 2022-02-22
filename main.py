@@ -12,6 +12,7 @@ Schedule the messages.
 #
 # Finish up schedule_timely function.
 # Add a user_info class to have all the information in one object to be able to use in our functions and lessen the amount of parameters needed.
+# Repeating parameters in multiple function calls probably means we need to create an object and have attributes/methods there.
 
 
 import random
