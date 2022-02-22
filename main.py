@@ -23,6 +23,13 @@ from twilio.rest import Client
 from twilio.base.exceptions import TwilioRestException
 
 
+class TwilioAccount:
+    """A class to encapsulate data about Twilio information, like associated numbers and tokens and such."""
+
+    def __init__(self) -> None:
+        pass
+
+
 def send_message(account, token, sender_cell_number, receiver_cell_number, message):
     """Send message using twilio API. Need twilio credentials (need to register for free)."""
     if (
