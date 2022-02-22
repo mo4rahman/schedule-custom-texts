@@ -29,6 +29,22 @@ class TwilioAccount:
     def __init__(self) -> None:
         pass
 
+    def import_json_credentials(self, file_name):
+        """import credentials from json file."""
+        # Make sure dictionary variables include account and token
+        try:
+            with open(file_name) as file_object:
+                # Can these become attributes of our object? Research this.
+                file_content = json.load(file_object)
+                account = file_content.get("account", None)
+                token = file_content.get("token", None)
+                sender_cell_number = file_content.get("sender_cell_number", None)
+                receiver_cell_number = file_content.get("receiver_cell_number", None)
+
+                return account, token, sender_cell_number, receiver_cell_number
+        except FileNotFoundError:
+            return None
+
 
 def send_message(account, token, sender_cell_number, receiver_cell_number, message):
     """Send message using twilio API. Need twilio credentials (need to register for free)."""
