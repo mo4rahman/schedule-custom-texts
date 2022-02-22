@@ -76,7 +76,8 @@ def import_json_credentials(file_name):
 
 
 def schedule_message(ACCOUNT, TOKEN, SENDER_CELL_NUMBER, RECEIVER_CELL_NUMBER, message):
-    """Schedules a message based on your criteria."""
+    """Schedules a message based on your criteria. Requirements are Account Id and Token
+    given by Twilio, sender cell phone number and receiver cell phone number linked with twilio, and a custom message."""
     while True:
         user_input = input(
             "Press 1 if you want to repeat a schedule every X minutes. Press 2 if you want to repeat a schedule daily at a certain time: "
