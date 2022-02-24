@@ -25,24 +25,29 @@ from twilio.base.exceptions import TwilioRestException
 class TwilioAccount:
     """A class to encapsulate data about Twilio information, like associated numbers and tokens and such."""
 
-    def __init__(self) -> None:
-        pass
+    def __init__(self, file_name):
+        # TODO: Create attributes based off of our import method.
+        self.file_name = file_name
+        if self.import_json_credentials():
+            (
+                self.account,
+                self.token,
+                self.sender_cell_number,
+                self.receiver_cell_number,
+            ) = self.import_json_credentials()
 
-    def import_json_credentials(self, file_name):
+    def import_json_credentials(self):
         """import credentials from json file."""
         # Make sure dictionary variables include account and token.
         try:
-            with open(file_name) as file_object:
-                # FIXME: Can these become attributes of our object? Research this.
+            with open(self.file_name) as file_object:
                 file_content = json.load(file_object)
-                self.account = file_content.get("account", None)
-                self.token = file_content.get("token", None)
-                self.sender_cell_number = file_content.get("sender_cell_number", None)
-                self.receiver_cell_number = file_content.get(
-                    "receiver_cell_number", None
-                )
-            return True
-            # return account, token, sender_cell_number, receiver_cell_number
+                # Included None default method in case these attributes are being assigned.
+                account = file_content.get("account", None)
+                token = file_content.get("token", None)
+                sender_cell_number = file_content.get("sender_cell_number", None)
+                receiver_cell_number = file_content.get("receiver_cell_number", None)
+            return account, token, sender_cell_number, receiver_cell_number
         except FileNotFoundError:
             return False
 
@@ -233,7 +238,13 @@ def main():
     # file_name = "PUSH_TO_GITHUB/schedule_text/sample_credentials.json"
     # Fill your message_bank with custom messages
     file_name = "secrets.json"
-    message_bank = ["Good Morning", "Hello Love", "ELLO LOVE"]
+    message_bank = [
+        "Good Morning",
+        "Top of the morning fam!",
+        "Hope you have a wonderful day!",
+    ]
+    account = TwilioAccount(file_name)
+    # FIXME: Figure out how to pass instances into function calls.
 
     if import_json_credentials(file_name):
         (
@@ -272,6 +283,7 @@ def main():
                 random.choice(message_bank),
             )
     else:
+        # Does not execute any of our scheduling/ main functions.
         print("Sorry, FILE DOES NOT EXIST. Make sure your file name is correct.")
 
 
