@@ -26,9 +26,9 @@ class TwilioAccount:
     """A class to encapsulate data about Twilio information, like associated numbers and tokens and such."""
 
     def __init__(self, file_name):
-        # TODO: Create attributes based off of our import method.
         self.file_name = file_name
-        if self.import_json_credentials():
+        # Instantiate attributes from our import json method below.
+        if self.import_json_credentials():  # If file exists.
             (
                 self.account,
                 self.token,
@@ -52,22 +52,22 @@ class TwilioAccount:
             return False
 
 
-def send_message(account, token, sender_cell_number, receiver_cell_number, message):
+def send_message(account_info, message):
     """Send message using twilio API. Need twilio credentials (need to register for free)."""
     if (
-        not account
-        or not token
-        or not sender_cell_number
-        or not receiver_cell_number
+        not account_info.account
+        or not account_info.token
+        or not account_info.sender_cell_number
+        or not account_info.receiver_cell_number
         or not message
     ):
         print("Sorry, one of your credentials is missing. Please try again.")
         return None
     try:
-        client = Client(account, token)
+        client = Client(account_info.account, account_info.token)
         client.messages.create(
-            to=receiver_cell_number,
-            from_=sender_cell_number,
+            to=account_info.receiver_cell_number,
+            from_=account_info.sender_cell_number,
             body=message,  # Add try blocks in case send message does not work.
         )
 
@@ -90,23 +90,7 @@ def send_message(account, token, sender_cell_number, receiver_cell_number, messa
         return None
 
 
-def import_json_credentials(file_name):
-    """import credentials from json file."""
-    # Make sure dictionary variables include account and token
-    try:
-        with open(file_name) as file_object:
-            file_content = json.load(file_object)
-            account = file_content.get("account", None)
-            token = file_content.get("token", None)
-            sender_cell_number = file_content.get("sender_cell_number", None)
-            receiver_cell_number = file_content.get("receiver_cell_number", None)
-
-            return account, token, sender_cell_number, receiver_cell_number
-    except FileNotFoundError:
-        return None
-
-
-def schedule_message(ACCOUNT, TOKEN, SENDER_CELL_NUMBER, RECEIVER_CELL_NUMBER, message):
+def schedule_message(account_info, message):
     """Schedules a message based on your criteria. Requirements are Account Id and Token
     given by Twilio, sender cell phone number and receiver cell phone number linked with twilio, and a custom message."""
     while True:
@@ -116,16 +100,12 @@ def schedule_message(ACCOUNT, TOKEN, SENDER_CELL_NUMBER, RECEIVER_CELL_NUMBER, m
 
         if user_input == "1":
             # Schedule minutes or hours.
-            schedule_timely(
-                ACCOUNT, TOKEN, SENDER_CELL_NUMBER, RECEIVER_CELL_NUMBER, message
-            )
+            schedule_timely(account_info, message)
             return
 
         elif user_input == "2":
             # Schedule daily at certain time.
-            schedule_daily(
-                ACCOUNT, TOKEN, SENDER_CELL_NUMBER, RECEIVER_CELL_NUMBER, message
-            )
+            schedule_daily(account_info, message)
             return
         else:
             print("Sorry, those were not one of the choices. Please try again.")
@@ -133,10 +113,7 @@ def schedule_message(ACCOUNT, TOKEN, SENDER_CELL_NUMBER, RECEIVER_CELL_NUMBER, m
 
 
 def schedule_daily(
-    ACCOUNT,
-    TOKEN,
-    SENDER_CELL_NUMBER,
-    RECEIVER_CELL_NUMBER,
+    account_info,
     message,
     hour=None,
     minute=None,
@@ -163,10 +140,7 @@ def schedule_daily(
                 # The time in .at() is passed as a string in the format hr:min.
                 schedule.every().day.at(f"{hour}:{minute}").do(
                     send_message,
-                    ACCOUNT,
-                    TOKEN,
-                    SENDER_CELL_NUMBER,
-                    RECEIVER_CELL_NUMBER,
+                    account_info,
                     message,
                 )
                 return
@@ -175,16 +149,13 @@ def schedule_daily(
             minute = "0"
         schedule.every().day.at(f"{hour}:{minute}").do(
             send_message,
-            ACCOUNT,
-            TOKEN,
-            SENDER_CELL_NUMBER,
-            RECEIVER_CELL_NUMBER,
+            account_info,
             message,
         )
     return
 
 
-def schedule_timely(ACCOUNT, TOKEN, SENDER_CELL_NUMBER, RECEIVER_CELL_NUMBER, message):
+def schedule_timely(account_info, message):
     """Schedules text message every minute or every hour."""
     while True:
         time_metric = input(
@@ -201,10 +172,7 @@ def schedule_timely(ACCOUNT, TOKEN, SENDER_CELL_NUMBER, RECEIVER_CELL_NUMBER, me
                 else:
                     schedule.every(num_of_mins).minutes.do(
                         send_message,
-                        ACCOUNT,
-                        TOKEN,
-                        SENDER_CELL_NUMBER,
-                        RECEIVER_CELL_NUMBER,
+                        account_info,
                         message,
                     )
                     return
@@ -217,13 +185,9 @@ def schedule_timely(ACCOUNT, TOKEN, SENDER_CELL_NUMBER, RECEIVER_CELL_NUMBER, me
                     print("Sorry, that is not a number. Please try again.")
                     continue
                 else:
-
                     schedule.every(num_of_hours).hours.do(
                         send_message,
-                        ACCOUNT,
-                        TOKEN,
-                        SENDER_CELL_NUMBER,
-                        RECEIVER_CELL_NUMBER,
+                        account_info,
                         message,
                     )
                     return
@@ -238,34 +202,21 @@ def main():
     # file_name = "PUSH_TO_GITHUB/schedule_text/sample_credentials.json"
     # Fill your message_bank with custom messages
     file_name = "secrets.json"
+    account_info = TwilioAccount(file_name)
     message_bank = [
         "Good Morning",
         "Top of the morning fam!",
         "Hope you have a wonderful day!",
     ]
-    account = TwilioAccount(file_name)
-    # FIXME: Figure out how to pass instances into function calls.
 
-    if import_json_credentials(file_name):
-        (
-            ACCOUNT,
-            TOKEN,
-            SENDER_CELL_NUMBER,
-            RECEIVER_CELL_NUMBER,
-        ) = import_json_credentials(
-            file_name
-        )  # Unpacks all the variables returned from the function.
-
+    if account_info.import_json_credentials():
         user_input = input(
             "Enter 1 if you want to schedule your message or Enter 2 if you want to send your message NOW: "
         )
         if user_input == "1":
             # Choose Schedule Function.
             schedule_message(
-                ACCOUNT,
-                TOKEN,
-                SENDER_CELL_NUMBER,
-                RECEIVER_CELL_NUMBER,
+                account_info,
                 random.choice(message_bank),
             )
             while True:
@@ -276,10 +227,7 @@ def main():
         else:
             # Choose Function to send message now.
             send_message(
-                ACCOUNT,
-                TOKEN,
-                SENDER_CELL_NUMBER,
-                RECEIVER_CELL_NUMBER,
+                account_info,
                 random.choice(message_bank),
             )
     else:
