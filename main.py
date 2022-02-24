@@ -10,7 +10,6 @@ Schedule the messages.
 
 # TODO: for continuing project:
 #
-# Finish up schedule_timely function.
 # Add a user_info class to have all the information in one object to be able to use in our functions and lessen the amount of parameters needed.
 # Repeating parameters in multiple function calls probably means we need to create an object and have attributes/methods there.
 
@@ -36,14 +35,16 @@ class TwilioAccount:
             with open(file_name) as file_object:
                 # FIXME: Can these become attributes of our object? Research this.
                 file_content = json.load(file_object)
-                account = file_content.get("account", None)
-                token = file_content.get("token", None)
-                sender_cell_number = file_content.get("sender_cell_number", None)
-                receiver_cell_number = file_content.get("receiver_cell_number", None)
-
-                return account, token, sender_cell_number, receiver_cell_number
+                self.account = file_content.get("account", None)
+                self.token = file_content.get("token", None)
+                self.sender_cell_number = file_content.get("sender_cell_number", None)
+                self.receiver_cell_number = file_content.get(
+                    "receiver_cell_number", None
+                )
+            return True
+            # return account, token, sender_cell_number, receiver_cell_number
         except FileNotFoundError:
-            return None
+            return False
 
 
 def send_message(account, token, sender_cell_number, receiver_cell_number, message):
